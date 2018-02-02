@@ -12,12 +12,12 @@ def find_packages(path='.', prefix=""):
 setup(
   name = 'TestcaseSelector',
   packages = list(find_packages(TestcaseSelect.__path__, TestcaseSelect.__name__)),
-  version = '1.0.0',
+  version = '1.1.0',
   description = 'Unittest test selector window',
   author = 'Charles Whaples',
   author_email = 'whaplescr@gmail.com',
   url = 'https://github.com/Whaplescr/TestcaseSelector',
-  download_url = 'https://github.com/Whaplescr/TestcaseSelector/tarball/1.0.0',
+  download_url = 'https://github.com/Whaplescr/TestcaseSelector/tarball/1.1.0',
   keywords = ['appium', 'selenium', 'testing','unittest','tkinter','ttk'],
   classifiers=[],
   install_requires=[]
