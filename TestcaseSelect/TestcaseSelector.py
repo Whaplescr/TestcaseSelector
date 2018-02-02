@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter.ttk import Notebook, Treeview
+from tkinter.ttk import Notebook, Treeview, Style
 import unittest
 
 
@@ -7,60 +7,50 @@ class TestcaseSelector:
 
     def start(self):
 
-        # Create the TK window
+        # Create TK window
         self.root = Tk()
-        window = self.root
-        self.note = Notebook(self.root)
 
-        window.wm_title("Select Testcases")
-        window.minsize(width=250,height=250)
+        # Set title and window size
+        self.root.wm_title("Select Testcases to Run")
 
-        # Create a scrollbar
-        scrollbar = Scrollbar(window)
-        scrollbar.pack(side=RIGHT,fill=Y)
+        # Create a frame for the treeview
+        self.testcase_frame = Frame(self.root)
 
-        # Create a window frame for the treeview we're going to add
-        testcase_frame = Frame(window)
-
-        # Set view on the frame and allow multiple selections
-        self.treeView = Treeview(testcase_frame,selectmode=EXTENDED)
-
-        # testcase_frame.pack(fill=X)
+        self.treeView = Treeview(self.testcase_frame,padding=[0,5,0,50],height=15)
         self.treeView.pack(fill=BOTH,expand=1)
 
-        # Attach scrollbar to Tree
-        self.treeView.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=self.treeView.yview)
+        testcase_dictionary = get_testcase_name_dictonary()
+        self.testcase_data = {}
+        self.testcase_run_data = {}
 
-        testSectionData = {}
-        testData = {}
+        for key in testcase_dictionary.keys():
+            subsection = testcase_dictionary[key]
 
-        # Add in all the available testcases as items in the tree grouped by their section
-        testcases_dictionary = get_testcase_name_dictonary()
+            self.testcase_data[key] = subsection
 
-        for key in testcases_dictionary.keys():
-            subsection = testcases_dictionary[key]
-            testSectionData[key] = testcases_dictionary[key]
-
-            subsection_parent = self.treeView.insert('',END,text=key)
+            s_p = self.treeView.insert('', END, text=key)
 
             for test in subsection:
-                self.treeView.insert(subsection_parent,END,text=test._testMethodName)
-                testData[test._testMethodName] = test
+                testcase_name = test._testMethodName
+                testcase_name = testcase_name
+                self.treeView.insert(s_p, END, text=testcase_name)
 
-        # self.webData = webData
-        self.webData = testData
-        self.testSectionData = testSectionData
-        self.frame = Frame(window)
-        self.frame.pack(fill=X)
+                self.testcase_run_data[testcase_name] = test
 
-        # Create Buttons for Cancel and Run
-        Button(testcase_frame, text="Cancel", fg="red", command=self.frame.quit, height=5, width=50).pack(side=RIGHT,fill=Y)
-        Button(testcase_frame, text="Run Selected",fg="green", command=self._save_selection,height=5,width=50).pack(side=LEFT,fill=Y)
+        self.webData = self.testcase_run_data
 
-        self.note.add(testcase_frame)
-        self.note.pack(fill=BOTH,expand=1)
+        # Create buttons for cancel and run tests
+        Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=20,height=5).pack(side=RIGHT,fill=Y)
+        Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,width=20,height=5).pack(side=LEFT,fill=Y)
 
+        self.testcase_frame.pack(fill=X)
+
+    def get_tests_from_selected_names(self,names):
+        ret_tests = {}
+        for name in names:
+            ret_tests[name] = self.webData[name]
+
+        return ret_tests
 
     def _save_selection(self):
         selected_tests = self.treeView.selection()
@@ -74,19 +64,12 @@ class TestcaseSelector:
                 else:
                     pass
             elif 'Tests' in item_text:
-                for test in self.testSectionData[item_text]:
+                for test in self.testcase_data[item_text]:
                     output.append(test._testMethodName)
                 # output = output + self.testSectionData[item_text]
 
-        self.frame.quit()
         self.testcases = self.get_tests_from_selected_names(output)
-
-    def get_tests_from_selected_names(self,names):
-        ret_tests = {}
-        for name in names:
-            ret_tests[name] = self.webData[name]
-
-        return ret_tests
+        self.root.quit()
 
     def get_testcases(self):
         self.start()
@@ -94,8 +77,6 @@ class TestcaseSelector:
         self.root.destroy()
 
         return self.testcases
-
-
 
 def test_name(parent):
     tns = []
