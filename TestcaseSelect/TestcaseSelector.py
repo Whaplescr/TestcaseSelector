@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter.ttk import Notebook, Treeview, Style
+from tkinter.ttk import Treeview, Style
 import unittest
 
 
@@ -9,6 +9,9 @@ class TestcaseSelector:
 
         # Create TK window
         self.root = Tk()
+        self.root.style = Style()
+        self.root.geometry('640x480')
+        self.root.style.configure('Treeview',rowheight=40)
 
         # Set title and window size
         self.root.wm_title("Select Testcases to Run")
@@ -16,7 +19,9 @@ class TestcaseSelector:
         # Create a frame for the treeview
         self.testcase_frame = Frame(self.root)
 
-        self.treeView = Treeview(self.testcase_frame,padding=[0,5,0,50],height=15)
+        self.treeView = Treeview(self.testcase_frame)
+
+
         self.treeView.pack(fill=BOTH,expand=1)
 
         testcase_dictionary = get_testcase_name_dictonary()
@@ -40,8 +45,10 @@ class TestcaseSelector:
         self.webData = self.testcase_run_data
 
         # Create buttons for cancel and run tests
-        Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=20,height=5).pack(side=RIGHT,fill=Y)
-        Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,width=20,height=5).pack(side=LEFT,fill=Y)
+        quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,height=100)
+        quit_button.pack(side=RIGHT,fill=X)
+        run_button = Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,height=100)
+        run_button.pack(side=LEFT,fill=X)
 
         self.testcase_frame.pack(fill=X)
 
@@ -76,7 +83,11 @@ class TestcaseSelector:
         self.root.mainloop()
         self.root.destroy()
 
-        return self.testcases
+        # Try/Except to fail gracefully
+        try:
+            return self.testcases
+        except:
+            exit(0)
 
 def test_name(parent):
     tns = []
@@ -114,3 +125,8 @@ def get_testcase_name_dictonary():
             section_dict[test_section] = [testcase_name]
 
     return section_dict
+
+# Testing code -- needs a Tests directory with a .py file containing unit-test to work
+# tcs = TestcaseSelector()
+# tests = tcs.get_testcases()
+# print(1)

@@ -12,7 +12,7 @@ def find_packages(path='.', prefix=""):
 setup(
   name = 'TestcaseSelector',
   packages = list(find_packages(TestcaseSelect.__path__, TestcaseSelect.__name__)),
-  version = '1.1.0',
+  version = '1.2.1',
   description = 'Unittest test selector window',
   author = 'Charles Whaples',
   author_email = 'whaplescr@gmail.com',
