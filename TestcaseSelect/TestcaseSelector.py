@@ -19,10 +19,18 @@ class TestcaseSelector:
         # Create a frame for the treeview
         self.testcase_frame = Frame(self.root)
 
+        # Create scrollbar for treeview
+        scrollbar = Scrollbar(self.root)
+        scrollbar.pack(side=RIGHT,fill=Y)
+
+        # Create Treeview
         self.treeView = Treeview(self.testcase_frame)
-
-
         self.treeView.pack(fill=BOTH,expand=1)
+
+        # Attach scrollbar to Treeview
+        self.treeView.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=self.treeView.yview)
+
 
         testcase_dictionary = get_testcase_name_dictonary()
         self.testcase_data = {}
@@ -45,10 +53,10 @@ class TestcaseSelector:
         self.webData = self.testcase_run_data
 
         # Create buttons for cancel and run tests
-        quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,height=100)
-        quit_button.pack(side=RIGHT,fill=X)
-        run_button = Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,height=100)
+        run_button = Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,width=20)
         run_button.pack(side=LEFT,fill=X)
+        quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=20)
+        quit_button.pack(side=RIGHT,fill=X)
 
         self.testcase_frame.pack(fill=X)
 
@@ -127,6 +135,6 @@ def get_testcase_name_dictonary():
     return section_dict
 
 # Testing code -- needs a Tests directory with a .py file containing unit-test to work
-# tcs = TestcaseSelector()
-# tests = tcs.get_testcases()
-# print(1)
+tcs = TestcaseSelector()
+tests = tcs.get_testcases()
+print(1)
