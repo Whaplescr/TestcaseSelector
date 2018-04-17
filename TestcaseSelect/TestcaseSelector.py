@@ -53,9 +53,9 @@ class TestcaseSelector:
         self.webData = self.testcase_run_data
 
         # Create buttons for cancel and run tests
-        run_button = Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,width=25,height=10)
+        run_button = Button(self.testcase_frame, text="Run", fg="green",command=self._save_selection,width=25,height=5)
         run_button.pack(side=LEFT,expand=1,fill=BOTH)
-        quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=25,height=10)
+        quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=25,height=5)
         quit_button.pack(side=RIGHT,expand=1,fill=BOTH)
 
         self.testcase_frame.pack(expand=1,fill=BOTH)
