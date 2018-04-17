@@ -9,8 +9,12 @@ class TestcaseSelector:
 
         # Create TK window
         self.root = Tk()
+
+        # Create Style object for TK window
         self.root.style = Style()
+        # Set default frame size to 800x640
         self.root.geometry('800x640')
+        # Set Treeview row height to 40 so there's no overlap
         self.root.style.configure('Treeview',rowheight=40)
 
         # Set title and window size
@@ -31,7 +35,7 @@ class TestcaseSelector:
         self.treeView.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=self.treeView.yview)
 
-
+        # Get testcase name dictionary to use for filling out treeview
         testcase_dictionary = get_testcase_name_dictonary()
         self.testcase_data = {}
         self.testcase_run_data = {}
@@ -58,6 +62,7 @@ class TestcaseSelector:
         quit_button = Button(self.testcase_frame, text="Cancel", fg="red", command=self.treeView.quit,width=25,height=5)
         quit_button.pack(side=RIGHT,expand=1,fill=BOTH)
 
+        # Pack the rest of the frame and tell it to scale on both x and y axis
         self.testcase_frame.pack(expand=1,fill=BOTH)
 
     def get_tests_from_selected_names(self,names):
@@ -110,19 +115,26 @@ def test_name(parent):
 
 def get_all_automated_tests():
 
+    # Create a unittest test loader
     loader = unittest.TestLoader()
+
+    # Discoverer is to look in the "Tests" directory" and find files ending in Tests.py
     tests = loader.discover('Tests', pattern='*Tests.py')
 
+    # Parses entries in *Tests.py file for unittests in classes and methods
     tcs = [y for x in [y for x in test_name(tests) for y in x] for y in x]
 
     return tcs
 
+
 def get_testcase_name_dictonary():
 
+    # Get collection of automated tests
     all_tests = get_all_automated_tests()
 
     section_dict = {}
 
+    # Sort tests into groups by their parent class
     for test in all_tests:
         testcase_name = test
         test_section = type(test).__name__
